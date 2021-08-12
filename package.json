@@ -1,21 +1,21 @@
 {
-  "name": "new-biomedical-id-resolver",
-  "version": "1.0.0",
-  "description": "js library for converting biological ids in batch",
+  "name": "biomedical-id-resolver-sri",
+  "version": "0.1.0",
+  "description": "js library for converting biological ids in batch using SRI node normalizer",
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ericz1803/new-biomedical-id-resolver.git"
+    "url": "git+https://github.com/biothings/biomedical-id-resolver-sri.js.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ericz1803/new-biomedical-id-resolver/issues"
+    "url": "https://github.com/biothings/biomedical-id-resolver-sri.js/issues"
   },
-  "homepage": "https://github.com/ericz1803/new-biomedical-id-resolver#readme",
+  "homepage": "https://github.com/biothings/biomedical-id-resolver-sri.js#readme",
   "dependencies": {
     "axios": "^0.21.1"
   }

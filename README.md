@@ -1,13 +1,13 @@
-# new-biomedical-id-resolver
-js library for converting biological ids in batch. It converts them using the [Node Normalization API](https://nodenormalization-sri-dev.renci.org/1.1/docs#/).
+# biomedical-id-resolver-sri.js
+js library for converting biological ids in batch using the [SRI node normalizer](https://nodenormalization-sri-dev.renci.org/1.1/docs#/).
 
 # Install
 ```
-$ npm i something //replace with real name
+$ npm i biomedical-id-resolver-sri
 ```
 # Usage
 ```js
-const resolve = require('something'); //replace with real name
+const resolve = require('biomedical-id-resolver-sri');
 
 // input can be an object, with semantic type as the key, and array of CURIEs as value
 let input = {

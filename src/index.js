@@ -13,35 +13,54 @@ const query = async (api_input) => {
 const transformResults = (results) => {
   Object.keys(results).forEach((key) => {
     let entry = results[key];
-
-    //add fields included in biomedical-id-resolver
-    entry.primaryID = entry.id.identifier;
-    entry.label = entry.id.label || entry.id.identifier;
-    entry.attributes = {};
-    entry.semanticType = entry.type[0].split(":")[1]; // get first semantic type without biolink prefix
-    entry.semanticTypes = entry.type;
-    entry.curies = Array.from(new Set(entry.equivalent_identifiers.map(id_obj => id_obj.identifier))).filter((x) => (x != null))
-
-    //assemble dbIDs
-    entry.dbIDs = {}
-    entry.equivalent_identifiers.forEach((id_obj) => {
-      let id_type = id_obj.identifier.split(":")[0];
-      if (config.CURIE_ALWAYS_PREFIXED.includes(id_type)) {
-        if (Array.isArray(entry.dbIDs[id_type])) {
-          entry.dbIDs[id_type].push(id_obj.identifier);
-        } else {
-          entry.dbIDs[id_type] = [id_obj.identifier];
+    let id_type = key.split(":")[0];
+    if (entry === null) { //handle unresolvable entities
+      entry = {
+        id: {
+          identifier: key,
+          label: key
+        },
+        primaryID: key,
+        label: key,
+        curies: [key],
+        attributes: {},
+        semanticType: '',
+        semanticTypes: [''],
+        dbIDs: {
+          [id_type]: config.CURIE_ALWAYS_PREFIXED.includes(id_type) ? key : key.split(":")[1]
         }
-      } else {
-        let curie_without_prefix = id_obj.identifier.split(":")[1];
-        if (Array.isArray(entry.dbIDs[id_type])) {
-          entry.dbIDs[id_type].push(curie_without_prefix);
+      };
+      console.log(entry);
+    } else {
+      //add fields included in biomedical-id-resolver
+      entry.primaryID = entry.id.identifier;
+      entry.label = entry.id.label || entry.id.identifier;
+      entry.attributes = {};
+      entry.semanticType = entry.type[0].split(":")[1]; // get first semantic type without biolink prefix
+      entry.semanticTypes = entry.type;
+      entry.curies = Array.from(new Set(entry.equivalent_identifiers.map(id_obj => id_obj.identifier))).filter((x) => (x != null))
+
+      //assemble dbIDs
+      entry.dbIDs = {}
+      entry.equivalent_identifiers.forEach((id_obj) => {
+        let id_type = id_obj.identifier.split(":")[0];
+        if (config.CURIE_ALWAYS_PREFIXED.includes(id_type)) {
+          if (Array.isArray(entry.dbIDs[id_type])) {
+            entry.dbIDs[id_type].push(id_obj.identifier);
+          } else {
+            entry.dbIDs[id_type] = [id_obj.identifier];
+          }
         } else {
-          entry.dbIDs[id_type] = [curie_without_prefix];
+          let curie_without_prefix = id_obj.identifier.split(":")[1];
+          if (Array.isArray(entry.dbIDs[id_type])) {
+            entry.dbIDs[id_type].push(curie_without_prefix);
+          } else {
+            entry.dbIDs[id_type] = [curie_without_prefix];
+          }
         }
-      }
-    })
-    entry.dbIDs.name = Array.from(new Set(entry.equivalent_identifiers.map(id_obj => id_obj.label))).filter((x) => (x != null));
+      })
+      entry.dbIDs.name = Array.from(new Set(entry.equivalent_identifiers.map(id_obj => id_obj.label))).filter((x) => (x != null));
+    }
     
     results[key] = [entry];
   });
